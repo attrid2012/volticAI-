@@ -1,15 +1,8 @@
 {
-  "name": "volticai-backend",
+  "name": "volticai",
   "version": "1.0.0",
-  "description": "volticAI backend",
-  "main": "server.js",
-  "scripts": {
-    "start": "node server.js"
-  },
+  "type": "module",
   "dependencies": {
-    "cors": "^2.8.5",
-    "dotenv": "^16.4.7",
-    "express": "^4.21.2",
     "openai": "^5.0.0"
   }
 }
