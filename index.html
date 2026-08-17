@@ -935,9 +935,90 @@ function updateDashboard() {
 }
 
 
-/* AI SOLVER */
+/* AI SOLVER */  
+    
+    const question =
+        document.getElementById("question").value.trim();
 
-function solveQuestion() {
+    if (!question) {
+        alert("Please write a question first.");
+        return;
+    }
+
+    if (!premium && searches >= 30) {
+        alert(
+            "You have reached your 30 daily searches. Upgrade to Premium for unlimited searches."
+        );
+        return;
+    }
+
+    const answer = document.getElementById("answer");
+
+    answer.innerHTML = `
+        <div style="text-align:center;padding:60px;">
+            <strong>volticAI is thinking...</strong>
+        </div>
+    `;
+
+    try {
+
+        const response = await fetch(
+            "https://voltic-ai-47lq.vercel.app/api/solve",
+            {
+                method: "POST",
+
+                headers: {
+                    "Content-Type": "application/json"
+                },
+
+                body: JSON.stringify({
+                    question: question
+                })
+            }
+        );
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.error || "Request failed");
+        }
+
+        answer.innerHTML = `
+            <strong>volticAI:</strong><br><br>
+            ${escapeHTML(data.answer).replace(/\n/g, "<br>")}
+        `;
+
+        if (!premium) {
+            searches++;
+
+            localStorage.setItem(
+                "volticSearches",
+                searches
+            );
+        }
+
+        recent.unshift(question);
+        recent = recent.slice(0, 20);
+
+        localStorage.setItem(
+            "volticRecent",
+            JSON.stringify(recent)
+        );
+
+        document.getElementById("question").value = "";
+
+        updateDashboard();
+
+    } catch (error) {
+
+        console.error(error);
+
+        answer.innerHTML = `
+            <strong>volticAI couldn't connect.</strong><br><br>
+            ${escapeHTML(error.message)}
+        `;
+    }
+}
 
     const question =
         document.getElementById("question").value.trim();
