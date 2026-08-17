@@ -1,0 +1,1209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>volticAI</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+    min-height: 100vh;
+    background:
+        radial-gradient(circle at 15% 20%, rgba(53, 90, 255, .25), transparent 35%),
+        radial-gradient(circle at 85% 80%, rgba(125, 40, 255, .25), transparent 35%),
+        linear-gradient(135deg, #030817, #07143a 45%, #13052c);
+    color: white;
+}
+
+/* NAVBAR */
+
+.navbar {
+    height: 75px;
+    padding: 0 6%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid rgba(255,255,255,.08);
+    background: rgba(3,8,23,.55);
+    backdrop-filter: blur(18px);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.logo {
+    font-size: 27px;
+    font-weight: 800;
+    letter-spacing: -1px;
+}
+
+.logo span {
+    color: #6d8cff;
+}
+
+.nav-buttons {
+    display: flex;
+    gap: 12px;
+}
+
+button {
+    border: none;
+    cursor: pointer;
+    color: white;
+}
+
+.nav-btn {
+    padding: 11px 20px;
+    border-radius: 10px;
+    background: transparent;
+    border: 1px solid rgba(255,255,255,.15);
+}
+
+.nav-btn:hover {
+    background: rgba(255,255,255,.08);
+}
+
+.primary {
+    background: linear-gradient(135deg,#4169ff,#8b42ff);
+    box-shadow: 0 8px 25px rgba(90,80,255,.3);
+}
+
+.primary:hover {
+    transform: translateY(-1px);
+}
+
+/* HERO */
+
+.hero {
+    min-height: calc(100vh - 75px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 60px 20px;
+}
+
+.hero-content {
+    max-width: 900px;
+}
+
+.badge {
+    display: inline-block;
+    padding: 8px 15px;
+    border-radius: 30px;
+    background: rgba(90,120,255,.12);
+    border: 1px solid rgba(110,130,255,.25);
+    color: #a9b8ff;
+    margin-bottom: 25px;
+}
+
+.hero h1 {
+    font-size: clamp(50px, 9vw, 95px);
+    line-height: .95;
+    margin-bottom: 25px;
+}
+
+.gradient-text {
+    background: linear-gradient(90deg,#6485ff,#a85cff);
+    -webkit-background-clip: text;
+    color: transparent;
+}
+
+.hero p {
+    color: #aeb9d5;
+    font-size: 19px;
+    line-height: 1.7;
+    max-width: 700px;
+    margin: auto;
+}
+
+.hero-actions {
+    margin-top: 35px;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.big-btn {
+    padding: 15px 28px;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+/* AUTH */
+
+.modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.72);
+    backdrop-filter: blur(12px);
+    z-index: 500;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.modal-box {
+    width: 420px;
+    max-width: 100%;
+    background: linear-gradient(145deg,#0b173c,#11102e);
+    border: 1px solid rgba(255,255,255,.12);
+    border-radius: 22px;
+    padding: 32px;
+    box-shadow: 0 30px 100px rgba(0,0,0,.5);
+}
+
+.modal-box h2 {
+    margin-bottom: 8px;
+}
+
+.modal-box p {
+    color: #8f9bbb;
+    margin-bottom: 25px;
+}
+
+.input {
+    width: 100%;
+    padding: 14px;
+    margin-bottom: 14px;
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,.12);
+    background: rgba(255,255,255,.05);
+    color: white;
+    outline: none;
+}
+
+.input:focus {
+    border-color: #667fff;
+}
+
+.full-btn {
+    width: 100%;
+    padding: 14px;
+    border-radius: 10px;
+    font-weight: bold;
+}
+
+.close {
+    float: right;
+    font-size: 22px;
+    background: transparent;
+    color: #8993b0;
+}
+
+/* DASHBOARD */
+
+#dashboard {
+    display: none;
+    min-height: 100vh;
+}
+
+.dashboard-layout {
+    display: grid;
+    grid-template-columns: 240px 1fr;
+    min-height: calc(100vh - 75px);
+}
+
+.sidebar {
+    border-right: 1px solid rgba(255,255,255,.08);
+    background: rgba(4,10,28,.55);
+    padding: 25px 15px;
+}
+
+.sidebar-title {
+    color: #737f9f;
+    font-size: 12px;
+    text-transform: uppercase;
+    margin: 15px 12px 10px;
+}
+
+.side-btn {
+    width: 100%;
+    text-align: left;
+    padding: 13px;
+    margin-bottom: 5px;
+    border-radius: 9px;
+    background: transparent;
+    color: #bdc7df;
+}
+
+.side-btn:hover,
+.side-btn.active {
+    background: rgba(93,112,255,.15);
+    color: white;
+}
+
+.main {
+    padding: 35px;
+    max-width: 1200px;
+    width: 100%;
+    margin: auto;
+}
+
+.welcome {
+    margin-bottom: 30px;
+}
+
+.welcome h1 {
+    font-size: 32px;
+    margin-bottom: 8px;
+}
+
+.welcome p {
+    color: #8f9bbb;
+}
+
+/* USAGE */
+
+.usage {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    margin-bottom: 25px;
+}
+
+.usage-card {
+    flex: 1;
+    min-width: 180px;
+    padding: 20px;
+    border-radius: 15px;
+    background: rgba(255,255,255,.045);
+    border: 1px solid rgba(255,255,255,.08);
+}
+
+.usage-card small {
+    color: #8894b3;
+}
+
+.usage-card strong {
+    display: block;
+    font-size: 25px;
+    margin-top: 8px;
+}
+
+/* AI BOX */
+
+.ai-container {
+    background: rgba(5,12,35,.65);
+    border: 1px solid rgba(255,255,255,.1);
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 20px 70px rgba(0,0,0,.25);
+}
+
+.ai-header {
+    padding: 20px;
+    border-bottom: 1px solid rgba(255,255,255,.08);
+    display: flex;
+    justify-content: space-between;
+}
+
+.ai-status {
+    color: #82a1ff;
+}
+
+.answer {
+    min-height: 300px;
+    padding: 25px;
+    color: #d8def0;
+    line-height: 1.7;
+    overflow-y: auto;
+}
+
+.placeholder {
+    color: #66718e;
+    text-align: center;
+    padding-top: 80px;
+}
+
+.input-area {
+    border-top: 1px solid rgba(255,255,255,.08);
+    padding: 15px;
+}
+
+textarea {
+    width: 100%;
+    min-height: 90px;
+    resize: vertical;
+    border: none;
+    outline: none;
+    background: transparent;
+    color: white;
+    font-size: 16px;
+}
+
+.toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+}
+
+.tools {
+    display: flex;
+    gap: 8px;
+}
+
+.tool-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 9px;
+    background: rgba(255,255,255,.07);
+    border: 1px solid rgba(255,255,255,.08);
+}
+
+.tool-btn:hover {
+    background: rgba(100,120,255,.2);
+}
+
+.send {
+    padding: 11px 22px;
+    border-radius: 9px;
+    font-weight: bold;
+}
+
+/* PREMIUM */
+
+.subscription {
+    margin-top: 25px;
+    padding: 25px;
+    border-radius: 18px;
+    background: linear-gradient(135deg,rgba(70,90,255,.15),rgba(130,55,255,.13));
+    border: 1px solid rgba(115,125,255,.2);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+}
+
+.subscription h2 {
+    margin-bottom: 7px;
+}
+
+.subscription p {
+    color: #929db9;
+}
+
+/* RECENTS */
+
+.page {
+    display: none;
+}
+
+.page.active {
+    display: block;
+}
+
+.recent-item {
+    padding: 18px;
+    margin-bottom: 10px;
+    background: rgba(255,255,255,.04);
+    border: 1px solid rgba(255,255,255,.07);
+    border-radius: 12px;
+    color: #c4cde2;
+}
+
+/* PROFILE */
+
+.profile-box {
+    background: rgba(255,255,255,.04);
+    border: 1px solid rgba(255,255,255,.08);
+    padding: 30px;
+    border-radius: 18px;
+}
+
+.profile-row {
+    padding: 15px 0;
+    border-bottom: 1px solid rgba(255,255,255,.07);
+}
+
+.profile-row span {
+    color: #8793b0;
+}
+
+/* RESPONSIVE */
+
+@media(max-width:800px) {
+
+    .dashboard-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .sidebar {
+        display: none;
+    }
+
+    .main {
+        padding: 20px;
+    }
+
+    .navbar {
+        padding: 0 20px;
+    }
+
+    .nav-buttons .nav-btn:first-child {
+        display: none;
+    }
+
+    .subscription {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+
+<nav class="navbar">
+    <div class="logo">voltic<span>AI</span></div>
+
+    <div class="nav-buttons" id="navButtons">
+        <button class="nav-btn" onclick="openModal('login')">Login</button>
+        <button class="nav-btn primary" onclick="openModal('register')">Register</button>
+    </div>
+</nav>
+
+
+<!-- LANDING PAGE -->
+
+<section class="hero" id="landing">
+
+    <div class="hero-content">
+
+        <div class="badge">AI-powered problem solving</div>
+
+        <h1>
+            Think faster.<br>
+            <span class="gradient-text">Solve smarter.</span>
+        </h1>
+
+        <p>
+            volticAI is your intelligent AI workspace for solving questions,
+            analysing files and images, generating content and getting
+            powerful answers in seconds.
+        </p>
+
+        <div class="hero-actions">
+            <button class="big-btn primary" onclick="openModal('register')">
+                Get Started
+            </button>
+
+            <button class="big-btn nav-btn" onclick="openModal('login')">
+                Login
+            </button>
+
+            <button class="big-btn nav-btn" onclick="showPricing()">
+                ₹2,999 / month
+            </button>
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- LOGIN MODAL -->
+
+<div class="modal" id="loginModal">
+
+    <div class="modal-box">
+
+        <button class="close" onclick="closeModals()">×</button>
+
+        <h2>Welcome back</h2>
+        <p>Login to continue to volticAI.</p>
+
+        <input class="input" id="loginEmail" type="email" placeholder="Email">
+
+        <input class="input" id="loginPassword" type="password" placeholder="Password">
+
+        <button class="full-btn primary" onclick="login()">
+            Login
+        </button>
+
+        <p style="margin-top:18px;text-align:center;">
+            Don't have an account?
+            <button onclick="switchModal('register')" style="background:none;color:#7892ff;">
+                Register
+            </button>
+        </p>
+
+    </div>
+
+</div>
+
+
+<!-- REGISTER MODAL -->
+
+<div class="modal" id="registerModal">
+
+    <div class="modal-box">
+
+        <button class="close" onclick="closeModals()">×</button>
+
+        <h2>Create your account</h2>
+        <p>Start using volticAI today.</p>
+
+        <input class="input" id="registerName" type="text" placeholder="Full name">
+
+        <input class="input" id="registerEmail" type="email" placeholder="Email">
+
+        <input class="input" id="registerPassword" type="password" placeholder="Password">
+
+        <button class="full-btn primary" onclick="register()">
+            Create Account
+        </button>
+
+        <p style="margin-top:18px;text-align:center;">
+            Already have an account?
+            <button onclick="switchModal('login')" style="background:none;color:#7892ff;">
+                Login
+            </button>
+        </p>
+
+    </div>
+
+</div>
+
+
+<!-- DASHBOARD -->
+
+<section id="dashboard">
+
+    <div class="dashboard-layout">
+
+        <aside class="sidebar">
+
+            <div class="sidebar-title">Workspace</div>
+
+            <button class="side-btn active" onclick="showPage('ai',this)">
+                AI Solver
+            </button>
+
+            <button class="side-btn" onclick="showPage('recent',this)">
+                Recent Searches
+            </button>
+
+            <button class="side-btn" onclick="showPage('profile',this)">
+                Profile
+            </button>
+
+            <div class="sidebar-title">Tools</div>
+
+            <button class="side-btn" onclick="generateImage()">
+                Generate Image
+            </button>
+
+            <button class="side-btn" onclick="generateVideo()">
+                Generate Video
+            </button>
+
+            <div class="sidebar-title">Account</div>
+
+            <button class="side-btn" onclick="buySubscription()">
+                Upgrade — ₹2,999
+            </button>
+
+            <button class="side-btn" onclick="logout()">
+                Logout
+            </button>
+
+        </aside>
+
+
+        <main class="main">
+
+            <!-- AI PAGE -->
+
+            <div class="page active" id="aiPage">
+
+                <div class="welcome">
+                    <h1>What can I help you solve?</h1>
+                    <p>Ask a question, upload a file, or send an image.</p>
+                </div>
+
+                <div class="usage">
+
+                    <div class="usage-card">
+                        <small>AI searches today</small>
+                        <strong id="searchCount">0 / 30</strong>
+                    </div>
+
+                    <div class="usage-card">
+                        <small>Image generations</small>
+                        <strong id="imageCount">0 / 3</strong>
+                    </div>
+
+                    <div class="usage-card">
+                        <small>Plan</small>
+                        <strong id="plan">Free</strong>
+                    </div>
+
+                </div>
+
+
+                <div class="ai-container">
+
+                    <div class="ai-header">
+                        <strong>volticAI Assistant</strong>
+                        <span class="ai-status">● Online</span>
+                    </div>
+
+                    <div class="answer" id="answer">
+
+                        <div class="placeholder">
+                            Ask volticAI anything.
+                        </div>
+
+                    </div>
+
+                    <div class="input-area">
+
+                        <textarea
+                            id="question"
+                            placeholder="Write your question here..."
+                        ></textarea>
+
+                        <div class="toolbar">
+
+                            <div class="tools">
+
+                                <button class="tool-btn"
+                                    onclick="startMic()"
+                                    title="Microphone">
+                                    🎤
+                                </button>
+
+                                <button class="tool-btn"
+                                    onclick="document.getElementById('fileInput').click()"
+                                    title="Attach file">
+                                    +
+                                </button>
+
+                                <input
+                                    id="fileInput"
+                                    type="file"
+                                    hidden
+                                    onchange="fileSelected(event)"
+                                >
+
+                            </div>
+
+                            <button class="send primary"
+                                onclick="solveQuestion()">
+                                Send
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="subscription">
+
+                    <div>
+                        <h2>Unlock volticAI Premium</h2>
+                        <p>
+                            Unlimited AI searches, unlimited image generation
+                            and video generation.
+                        </p>
+                    </div>
+
+                    <button class="big-btn primary"
+                        onclick="buySubscription()">
+                        Upgrade ₹2,999
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- RECENT PAGE -->
+
+            <div class="page" id="recentPage">
+
+                <div class="welcome">
+                    <h1>Recent Searches</h1>
+                    <p>Your previous questions appear here.</p>
+                </div>
+
+                <div id="recentList">
+                    <div class="recent-item">
+                        No searches yet.
+                    </div>
+                </div>
+
+            </div>
+
+
+            <!-- PROFILE PAGE -->
+
+            <div class="page" id="profilePage">
+
+                <div class="welcome">
+                    <h1>Your Profile</h1>
+                    <p>Manage your volticAI account.</p>
+                </div>
+
+                <div class="profile-box">
+
+                    <div class="profile-row">
+                        <span>Name</span><br>
+                        <strong id="profileName">User</strong>
+                    </div>
+
+                    <div class="profile-row">
+                        <span>Email</span><br>
+                        <strong id="profileEmail">user@example.com</strong>
+                    </div>
+
+                    <div class="profile-row">
+                        <span>Current plan</span><br>
+                        <strong id="profilePlan">Free</strong>
+                    </div>
+
+                    <div class="profile-row">
+                        <span>Daily AI searches</span><br>
+                        <strong>30 searches</strong>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </main>
+
+    </div>
+
+</section>
+
+
+<script>
+
+/* USER DATA */
+
+let user = JSON.parse(localStorage.getItem("volticUser")) || null;
+
+let searches = Number(localStorage.getItem("volticSearches")) || 0;
+
+let images = Number(localStorage.getItem("volticImages")) || 0;
+
+let recent = JSON.parse(localStorage.getItem("volticRecent")) || [];
+
+let premium = localStorage.getItem("volticPremium") === "true";
+
+
+/* MODALS */
+
+function openModal(type) {
+
+    closeModals();
+
+    document.getElementById(type + "Modal").style.display = "flex";
+}
+
+function closeModals() {
+
+    document.querySelectorAll(".modal").forEach(modal => {
+        modal.style.display = "none";
+    });
+
+}
+
+function switchModal(type) {
+    openModal(type);
+}
+
+
+/* REGISTER */
+
+function register() {
+
+    const name =
+        document.getElementById("registerName").value.trim();
+
+    const email =
+        document.getElementById("registerEmail").value.trim();
+
+    const password =
+        document.getElementById("registerPassword").value;
+
+    if (!name || !email || !password) {
+        alert("Please fill all fields.");
+        return;
+    }
+
+    user = {
+        name: name,
+        email: email
+    };
+
+    localStorage.setItem("volticUser", JSON.stringify(user));
+
+    alert("Account created successfully.");
+
+    closeModals();
+
+    openDashboard();
+}
+
+
+/* LOGIN */
+
+function login() {
+
+    const email =
+        document.getElementById("loginEmail").value.trim();
+
+    const password =
+        document.getElementById("loginPassword").value;
+
+    if (!email || !password) {
+        alert("Please enter email and password.");
+        return;
+    }
+
+    user = {
+        name: email.split("@")[0],
+        email: email
+    };
+
+    localStorage.setItem("volticUser", JSON.stringify(user));
+
+    closeModals();
+
+    openDashboard();
+}
+
+
+/* DASHBOARD */
+
+function openDashboard() {
+
+    document.getElementById("landing").style.display = "none";
+
+    document.getElementById("dashboard").style.display = "block";
+
+    document.getElementById("navButtons").style.display = "none";
+
+    updateDashboard();
+
+}
+
+
+/* UPDATE */
+
+function updateDashboard() {
+
+    document.getElementById("searchCount").textContent =
+        premium ? "Unlimited" : searches + " / 30";
+
+    document.getElementById("imageCount").textContent =
+        premium ? "Unlimited" : images + " / 3";
+
+    document.getElementById("plan").textContent =
+        premium ? "Premium" : "Free";
+
+    document.getElementById("profileName").textContent =
+        user ? user.name : "User";
+
+    document.getElementById("profileEmail").textContent =
+        user ? user.email : "";
+
+    document.getElementById("profilePlan").textContent =
+        premium ? "Premium — ₹2,999/month" : "Free";
+
+    updateRecent();
+
+}
+
+
+/* AI SOLVER */
+
+function solveQuestion() {
+
+    const question =
+        document.getElementById("question").value.trim();
+
+    if (!question) {
+        alert("Please write a question first.");
+        return;
+    }
+
+    if (!premium && searches >= 30) {
+
+        alert(
+            "You have reached your 30 daily searches. Upgrade to Premium for unlimited searches."
+        );
+
+        return;
+    }
+
+    if (!premium) {
+
+        searches++;
+
+        localStorage.setItem(
+            "volticSearches",
+            searches
+        );
+
+    }
+
+    const answer =
+        document.getElementById("answer");
+
+    answer.innerHTML = `
+        <strong>You asked:</strong><br><br>
+        ${escapeHTML(question)}
+        <br><br>
+        <strong>volticAI:</strong><br><br>
+        Your AI response will appear here once the volticAI API
+        is connected.
+        <br><br>
+        <span style="color:#7185c9;">
+        Frontend connection successful.
+        </span>
+    `;
+
+    recent.unshift(question);
+
+    recent = recent.slice(0, 20);
+
+    localStorage.setItem(
+        "volticRecent",
+        JSON.stringify(recent)
+    );
+
+    document.getElementById("question").value = "";
+
+    updateDashboard();
+
+}
+
+
+/* RECENTS */
+
+function updateRecent() {
+
+    const list =
+        document.getElementById("recentList");
+
+    if (!recent.length) {
+
+        list.innerHTML =
+            `<div class="recent-item">No searches yet.</div>`;
+
+        return;
+    }
+
+    list.innerHTML = recent.map(item => `
+        <div class="recent-item">
+            ${escapeHTML(item)}
+        </div>
+    `).join("");
+
+}
+
+
+/* FILE */
+
+function fileSelected(event) {
+
+    const file = event.target.files[0];
+
+    if (!file) return;
+
+    document.getElementById("question").value +=
+        `\n[Attached: ${file.name}]`;
+
+}
+
+
+/* MICROPHONE */
+
+function startMic() {
+
+    if (!("webkitSpeechRecognition" in window) &&
+        !("SpeechRecognition" in window)) {
+
+        alert("Speech recognition is not supported in this browser.");
+
+        return;
+    }
+
+    const SpeechRecognition =
+        window.SpeechRecognition ||
+        window.webkitSpeechRecognition;
+
+    const recognition = new SpeechRecognition();
+
+    recognition.lang = "en-IN";
+
+    recognition.start();
+
+    recognition.onresult = function(event) {
+
+        const text =
+            event.results[0][0].transcript;
+
+        document.getElementById("question").value +=
+            text;
+
+    };
+
+}
+
+
+/* IMAGE GENERATION */
+
+function generateImage() {
+
+    if (!premium && images >= 3) {
+
+        alert(
+            "You have reached your 3 daily image generations. Upgrade to Premium for unlimited image generation."
+        );
+
+        return;
+    }
+
+    if (!premium) {
+
+        images++;
+
+        localStorage.setItem(
+            "volticImages",
+            images
+        );
+
+    }
+
+    alert(
+        premium
+        ? "Premium image generation is ready to connect to your AI image API."
+        : "Image generation demo used. " + images + "/3 used today."
+    );
+
+    updateDashboard();
+
+}
+
+
+/* VIDEO */
+
+function generateVideo() {
+
+    if (!premium) {
+
+        alert(
+            "Video generation is available only with volticAI Premium."
+        );
+
+        return;
+    }
+
+    alert(
+        "Premium video generation is ready to connect to your video AI API."
+    );
+
+}
+
+
+/* SUBSCRIPTION */
+
+function buySubscription() {
+
+    alert(
+        "₹2,999/month Premium subscription selected.\n\nPayment gateway needs to be connected before real payments can be accepted."
+    );
+
+}
+
+
+/* NAVIGATION */
+
+function showPage(page, button) {
+
+    document.querySelectorAll(".page").forEach(p => {
+        p.classList.remove("active");
+    });
+
+    document.querySelectorAll(".side-btn").forEach(b => {
+        b.classList.remove("active");
+    });
+
+    document.getElementById(page + "Page")
+        .classList.add("active");
+
+    if (button) {
+        button.classList.add("active");
+    }
+
+}
+
+
+/* PRICING */
+
+function showPricing() {
+
+    openModal("register");
+
+}
+
+
+/* LOGOUT */
+
+function logout() {
+
+    document.getElementById("dashboard").style.display = "none";
+
+    document.getElementById("landing").style.display = "flex";
+
+    document.getElementById("navButtons").style.display = "flex";
+
+}
+
+
+/* SECURITY */
+
+function escapeHTML(text) {
+
+    const div = document.createElement("div");
+
+    div.textContent = text;
+
+    return div.innerHTML;
+
+}
+
+
+/* AUTO LOGIN */
+
+if (user) {
+
+    openDashboard();
+
+}
+
+</script>
+
+</body>
+</html>
